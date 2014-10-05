@@ -4,12 +4,29 @@ package Conclave::OTK;
 # ABSTRACT: Conclave Ontology Toolkit
 
 use Conclave::OTK::Queries;
+use File::HomeDir;
+use File::Spec;
 
 sub new {
   my ($class, $base_uri, %opts) = @_;
   my $self = bless({}, $class);
 
+  # set defaults
   my $backend = 'File';
+
+  # attempt to read conf file
+  my $conf = File::Spec->catfile(File::HomeDir->my_home, '.conc-otk.conf');
+  if (-e $conf) {
+    open my $fh, '<', $conf;
+    while (my $line = <$fh>) {
+      chomp $line;
+      my ($k, $v) = split /\s*=\s*/, $line;
+      next unless ($k and $v);
+      $opts{$k} = $v unless exists $opts{$k};
+    }
+    close $fh;
+  }
+
   $backend = $opts{backend} if $opts{backend};
   my $module = "Conclave::OTK::Backend::$backend";
   eval "use $module";
