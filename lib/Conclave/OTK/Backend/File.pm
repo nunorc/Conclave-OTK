@@ -28,9 +28,6 @@ sub new {
 sub init {
   my ($self, $rdfxml) = @_;
 
-  unless ($rdfxml) {
-    $rdfxml = Conclave::OTK::create_owl($self->{base_uri});
-  }
   unless (-e $self->{filename}) {
     touch($self->{filename});
   }
