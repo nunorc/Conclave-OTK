@@ -4,7 +4,6 @@ package Conclave::OTK;
 # ABSTRACT: Conclave Ontology Toolkit
 
 use Conclave::OTK::Queries;
-use Conclave::OTK::Backend::File;
 
 sub new {
   my ($class, $base_uri, %opts) = @_;
@@ -13,6 +12,7 @@ sub new {
   my $backend = 'File';
   $backend = $opts{backend} if $opts{backend};
   my $module = "Conclave::OTK::Backend::$backend";
+  eval "use $module";
 
   my $format = 'OWL';  # default queries underlying format
 
