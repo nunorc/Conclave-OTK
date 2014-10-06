@@ -254,6 +254,7 @@ sub add_data_prop {
 sub full_uri {
   my ($self, $name) = @_;
   return $name if $name =~ m/^<.*>$/;
+  return "<$name>" if $name =~ m/^http:\/\//;
 
   return '<'.$self->{base_uri}.'#'.$name.'>';
 }
