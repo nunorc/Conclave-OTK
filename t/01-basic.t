@@ -1,20 +1,25 @@
 #!perl -T
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 use Test::File;
 
 use Conclave::OTK;
 use File::Temp qw/tempfile tempdir/;
 
-my $rdfxml = do { local $/; <main::DATA> };
 my $base_uri = 'http://local/example';
+my $rdfxml = Conclave::OTK::empty_owl($base_uri);
 my (undef, $filename) = tempfile('onto_test_XXXXXXXX', TMPDIR=>1, SUFFIX=>'.rdf', OPEN=>0, );
 
-my $onto = Conclave::OTK->new($base_uri, 
+my $onto = Conclave::OTK->new($base_uri,
                backend => 'File',
                filename => $filename
              );
 $onto->init($rdfxml);
+
+my $onto2 = Conclave::OTK->new($base_uri, 
+               backend => 'File',
+             );
+is( $onto2->{backend}->{filename}, './model.rdf', 'default file name');
 
 my @classes = sort $onto->get_classes;
 is( scalar(@classes), 0, 'start with no classes' );
@@ -63,23 +68,3 @@ is_deeply( $tree, $expect, 'class tree' );
 $onto->delete;
 file_not_exists_ok($filename);
 
-__DATA__
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!DOCTYPE rdf:RDF [
-    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
-    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
-    <!ENTITY example "http://local/example" >
-    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
-    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
-]>
-
-<rdf:RDF xmlns="http://local/example"
-     xml:base="http://local/example"
-     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-     xmlns:empty="[% base_uri %]"
-     xmlns:owl="http://www.w3.org/2002/07/owl#"
-     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-    <owl:Ontology rdf:about="http://local/example"/>
-</rdf:RDF>

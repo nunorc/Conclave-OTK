@@ -12,6 +12,8 @@ use RDF::Query;
 use File::Touch;
 use Data::Dumper;
 
+$ENV{PATH} = undef;
+
 sub new {
   my ($class, $base_uri, %opts) = @_;
   my $self = bless({}, $class);

@@ -305,6 +305,35 @@ sub draw_graph {
   return $dot;
 }
 
+# FIXME move this somewhere else?
+sub empty_owl {
+  my ($base_uri) = (@_);
+
+  my $rdfxml =<<"EOR";
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY example "http://local/example" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+<rdf:RDF xmlns="$base_uri"
+     xml:base="$base_uri"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:empty="$base_uri"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="http://local/example"/>
+</rdf:RDF>
+EOR
+
+  return $rdfxml;
+}
+
 1;
 
 __END__
