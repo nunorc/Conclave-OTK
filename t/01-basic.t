@@ -1,6 +1,6 @@
 #!perl -T
 
-use Test::More tests => 12;
+use Test::More tests => 13;
 use Test::File;
 
 use Conclave::OTK;
@@ -64,6 +64,9 @@ is_deeply( [@props], [["$base_uri#Peter","$base_uri#hasAge","28"]], 'data propri
 my $expect = { 'http://www.w3.org/2002/07/owl#Thing' => { "$base_uri#Person" => { "$base_uri#Female" => undef, "$base_uri#Male" => undef } } };
 my $tree = $onto->get_class_tree;
 is_deeply( $tree, $expect, 'class tree' );
+
+@els = $onto->get_obj_props_for('hasParent', 'Peter');
+is_deeply( [@els], ["$base_uri#Ann"], 'get obj props for' );
 
 $onto->delete;
 file_not_exists_ok($filename);

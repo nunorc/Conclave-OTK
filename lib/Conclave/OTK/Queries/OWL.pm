@@ -153,6 +153,18 @@ FROM <[% graph %]>
 }
 EOT
 ,
+'get_obj_props_for' => <<'EOT'
+[% FOREACH p IN prefixes.keys -%]
+PREFIX [% p %]: <[% prefixes.item(p) %]>
+[% END -%]
+
+SELECT DISTINCT ?o
+FROM <[% graph %]>
+  WHERE {
+    ?o [% rel %] [% el %]
+  }
+EOT
+,
 'get_data_props' => <<'EOT'
 [% FOREACH p IN prefixes.keys -%]
 PREFIX [% p %]: <[% prefixes.item(p) %]>

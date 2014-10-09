@@ -200,6 +200,21 @@ sub get_obj_props {
   return @props;
 }
 
+sub get_obj_props_for {
+  my ($self, $rel, $el) = @_;
+
+  my $vars = {
+      'prefixes' => $self->{prefixes},
+      'graph'    => $self->{graph},
+      'rel'      => $self->full_uri($rel),
+      'el'       => $self->full_uri($el),
+    };
+  my $sparql = $self->{queries}->process('get_obj_props_for', $vars);
+
+  my @els = $self->{backend}->query($sparql);
+  return @els;
+}
+
 sub get_ranges {
   my ($self) = @_;
 
@@ -382,6 +397,8 @@ This module is under developement, and things still change often.
 =method add_obj_prop
 
 =method get_obj_props
+
+=method get_obj_props_for
 
 =method get_ranges
 
