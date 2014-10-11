@@ -15,16 +15,18 @@ sub new {
   my $backend = 'File';
 
   # attempt to read conf file
-  my $conf = File::Spec->catfile(File::HomeDir->my_home, '.conc-otk.conf');
-  if (-e $conf) {
-    open my $fh, '<', $conf;
-    while (my $line = <$fh>) {
-      chomp $line;
-      my ($k, $v) = split /\s*=\s*/, $line;
-      next unless ($k and $v);
-      $opts{$k} = $v unless exists $opts{$k};
+  unless ($opts{ignoreconfigfile}) {
+    my $conf = File::Spec->catfile(File::HomeDir->my_home, '.conc-otk.conf');
+    if (-e $conf) {
+      open my $fh, '<', $conf;
+      while (my $line = <$fh>) {
+        chomp $line;
+        my ($k, $v) = split /\s*=\s*/, $line;
+        next unless ($k and $v);
+        $opts{$k} = $v unless exists $opts{$k};
+      }
+      close $fh;
     }
-    close $fh;
   }
 
   $backend = $opts{backend} if $opts{backend};

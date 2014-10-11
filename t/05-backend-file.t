@@ -14,7 +14,7 @@ my (undef, $filename) = tempfile('onto_test_XXXXXXXX', TMPDIR=>1, SUFFIX=>'.rdf'
 
 my $b1 = Conclave::OTK::Backend::File->new($base_uri);
 is( $b1->{base_uri}, $base_uri, 'base uri arg');
-is( $b1->{filename}, './model.rdf', 'default file name');
+is( $b1->{filename}, 'model.rdf', 'default file name');
 
 my $b2 = Conclave::OTK::Backend::File->new($base_uri, filename=>$filename );
 is( $b2->{base_uri}, $base_uri, 'base uri arg');

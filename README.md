@@ -51,6 +51,8 @@ This module is under developement, and things still change often.
 
 ## get\_obj\_props
 
+## get\_obj\_props\_for
+
 ## get\_ranges
 
 ## get\_data\_props

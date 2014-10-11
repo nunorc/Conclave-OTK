@@ -18,8 +18,9 @@ $onto->init($rdfxml);
 
 my $onto2 = Conclave::OTK->new($base_uri, 
                backend => 'File',
+               ignoreconfigfile => 1,
              );
-is( $onto2->{backend}->{filename}, './model.rdf', 'default file name');
+is( $onto2->{backend}->{filename}, 'model.rdf', 'default file name');
 
 my @classes = sort $onto->get_classes;
 is( scalar(@classes), 0, 'start with no classes' );

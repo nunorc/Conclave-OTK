@@ -18,7 +18,7 @@ sub new {
   my ($class, $base_uri, %opts) = @_;
   my $self = bless({}, $class);
 
-  my $filename = './model.rdf';
+  my $filename = 'model.rdf';
   $filename = $opts{filename} if $opts{filename};
 
   $self->{base_uri} = $base_uri;
