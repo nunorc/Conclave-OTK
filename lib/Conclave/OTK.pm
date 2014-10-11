@@ -31,7 +31,9 @@ sub new {
 
   $backend = $opts{backend} if $opts{backend};
   my $module = "Conclave::OTK::Backend::$backend";
-  eval "use $module";
+  if ($module =~ m/^([\w:]+)$/) {
+    eval "use $1";
+  }
 
   my $format = 'OWL';  # default queries underlying format
 
