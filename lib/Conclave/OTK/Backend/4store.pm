@@ -60,9 +60,9 @@ sub query {
     print STDERR "Query failed: ", $response->status_line, "\n";
   }
   else {
-    my $csv = $response->decoded_content;
+    my $tsv = $response->decoded_content;
     # FIXME
-    my @lines = split /\n/, $csv;
+    my @lines = split /\n/, $tsv;
     shift @lines;
     foreach my $triple (@lines) {
       $triple =~ s/[<>]//g;

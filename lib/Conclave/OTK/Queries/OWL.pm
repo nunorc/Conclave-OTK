@@ -175,8 +175,8 @@ FROM <[% graph %]>
     ?n ?p ?v .
     ?p rdf:type owl:DatatypeProperty .
   FILTER ( 
-    REGEX(str(?n), "^<?[% instance %]>?$") ||
-    REGEX(str(?v), "^<?[% instance %]>?$")
+    REGEX(str(?n), "^<?[% instance.remove('(<|>)') %]>?$") ||
+    REGEX(str(?v), "^<?[% instance.remove('(<|>)')  %]>?$")
   )
 }
 EOT

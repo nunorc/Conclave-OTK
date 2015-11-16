@@ -234,11 +234,7 @@ sub get_ranges {
 
 sub get_data_props {
   my ($self, $instance) = @_;
-
-  # XXX some backends return str(?n) with < >
   $instance = $self->full_uri($instance);
-  $instance =~ s/^<//;
-  $instance =~ s/>$//;
 
   my $vars = {
       'prefixes' => $self->{prefixes},
