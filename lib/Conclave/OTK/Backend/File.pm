@@ -7,9 +7,10 @@ use parent qw/Conclave::OTK::Backend/;
 use RDF::Trine;
 use RDF::Trine::Model;
 use RDF::Trine::Parser;
-use RDF::Trine::Store::File;
+use RDF::Trine::Store::Memory;
+use RDF::Trine::Serializer::RDFXML;
 use RDF::Query;
-use File::Touch;
+use Path::Tiny;
 use Data::Dumper;
 
 $ENV{PATH} = undef;
@@ -18,26 +19,32 @@ sub new {
   my ($class, $base_uri, %opts) = @_;
   my $self = bless({}, $class);
 
-  my $filename = 'model.rdf';
+  my $filename = 'model.xml';
   $filename = $opts{filename} if $opts{filename};
 
   $self->{base_uri} = $base_uri;
   $self->{filename} = $filename;
+
   return $self;
 }
+  #my $store = RDF::Trine::Store::Memory->new;
+  #my $model = RDF::Trine::Model->new($store);
 
+  #my $serializer = RDF::Trine::Serializer::NQuads->new();
 
 sub init {
   my ($self, $rdfxml) = @_;
 
-  unless (-e $self->{filename}) {
-    touch($self->{filename});
-  }
-  my $store = RDF::Trine::Store::File->new($self->{filename});
+  my $store = RDF::Trine::Store::Memory->new;
   my $model = RDF::Trine::Model->new($store);
-
   my $parser = RDF::Trine::Parser->new('rdfxml');
+  my $serializer = RDF::Trine::Serializer::RDFXML->new( base_uri => $self->{base_uri} );
+
   $parser->parse_into_model($self->{base_uri}, $rdfxml, $model);
+
+  open(my $fh, '>', $self->{filename});
+  $serializer->serialize_model_to_file($fh, $model);
+  close($fh);
 }
 
 sub update {
@@ -45,9 +52,19 @@ sub update {
 
   my $query = RDF::Query->new($sparql, {update => 1});
 
-  my $store = RDF::Trine::Store::File->new($self->{filename});
+  my $parser = RDF::Trine::Parser->new('rdfxml');
+  my $serializer = RDF::Trine::Serializer::RDFXML->new( base_uri => $self->{base_uri} );
+  my $file = path($self->{filename});
+  my $data = $file->slurp_utf8;
+  my $store = RDF::Trine::Store::Memory->new;
   my $model = RDF::Trine::Model->new($store);
+  $parser->parse_into_model($self->{base_uri}, $data, $model);
+
   my $iterator = $query->execute($model);
+
+  open(my $fh, '>', $self->{filename});
+  $serializer->serialize_model_to_file($fh, $model);
+  close($fh);
 
   return $iterator;
 }
@@ -57,8 +74,12 @@ sub query {
 
   my $query = RDF::Query->new($sparql);
 
-  my $store = RDF::Trine::Store::File->new($self->{filename});
+  my $parser = RDF::Trine::Parser->new('rdfxml');
+  my $file = path($self->{filename});
+  my $data = $file->slurp_utf8;
+  my $store = RDF::Trine::Store::Memory->new;
   my $model = RDF::Trine::Model->new($store);
+  $parser->parse_into_model($self->{base_uri}, $data, $model);
   my $iterator = $query->execute($model);
 
   my @result;
