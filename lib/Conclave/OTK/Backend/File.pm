@@ -27,10 +27,6 @@ sub new {
 
   return $self;
 }
-  #my $store = RDF::Trine::Store::Memory->new;
-  #my $model = RDF::Trine::Model->new($store);
-
-  #my $serializer = RDF::Trine::Serializer::NQuads->new();
 
 sub init {
   my ($self, $rdfxml) = @_;
