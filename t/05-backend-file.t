@@ -6,7 +6,6 @@ use Test::File;
 use Conclave::OTK;
 use Conclave::OTK::Backend::File;
 use File::Temp qw/tempfile tempdir/;
-use File::Touch;
 
 my $base_uri = 'http://local/example';
 my $rdfxml = Conclave::OTK::empty_owl($base_uri);
@@ -27,7 +26,6 @@ file_exists_ok($filename);
 (undef, $filename) = tempfile('onto_test_XXXXXXXX', TMPDIR=>1, SUFFIX=>'.rdf', OPEN=>0, UNLINK=>1);
 
 my $b3 = Conclave::OTK::Backend::File->new($base_uri, filename=>$filename );
-touch($filename);
-file_exists_ok($filename);
 $b3->init($rdfxml);
+file_exists_ok($filename);
 
