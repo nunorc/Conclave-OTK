@@ -50,7 +50,7 @@ $onto->add_obj_prop('Ann', 'hasParent', 'Peter');
 
 my @props = $onto->get_obj_props('Ann');
 is_deeply( [@props], [["$base_uri#Ann","$base_uri#hasParent","$base_uri#Peter"]], 'object proprieties' );
-my @props = $onto->get_obj_props('Peter');
+@props = $onto->get_obj_props('Peter');
 is_deeply( [@props], [["$base_uri#Ann","$base_uri#hasParent","$base_uri#Peter"]], 'object proprieties' );
 
 $onto->add_data_prop('Ann', 'hasAge', '4', 'int');
