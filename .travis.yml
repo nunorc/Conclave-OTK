@@ -5,7 +5,7 @@ perl:
    - '5.20'
    - '5.18'
 install:
-   - cpanm --quiet --notest --skip-satisfied Dist::Zilla
+   - cpanm Dist::Zilla~5.039
    - dzil authordeps --missing | cpanm
    - dzil listdeps --author --missing | cpanm
 script:
